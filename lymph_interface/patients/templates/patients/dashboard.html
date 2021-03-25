@@ -12,7 +12,7 @@
         <ul>
             <li><p class="title">Diagnoses</p> </li>
 
-            {% for checkbox in form.modality_checkboxes %}
+            {% for checkbox in form.modalities %}
             <li>
                 {{ checkbox.tag }}
                 <label for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>

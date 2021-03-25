@@ -173,20 +173,25 @@ def query_patients(data):
     q = Patient.objects.all()  # first, collect all patients, then restrict
     _ = oneminusone_to_bool  # neccessary because radio buttons return 1, 0 or -1
     
-    # PATIENT specific fields
-    # nictoine abuse
+    # PATIENT specific fields. First, narrow down the patients by their rele-
+    # vant model fields. If the three-way toggle button for those fields is set 
+    # to "unknown/not interested" (value 0) the respective query is simply 
+    # skipped.
+    # Nictoine abuse
     if (na := data["nicotine_abuse"]) != 0:
         q = q.filter(nicotine_abuse=_(na))
         
-    # hpv status
+    # HPV status
     if (hpv := data["hpv_status"]) != 0:
         q = q.filter(hpv_status=_(hpv))
         
-    # neck dissection
+    # Neck dissection
     if (nd := data["neck_dissection"]) != 0:
         q = q.filter(neck_dissection=_(nd))
         
-    # TUMOR specific queries
+    # TUMOR specific queries. Similar approach to the patient-specific fields. 
+    # However, I need to keep in mind that this will yield wrong results for 
+    # multiple tumors.
     # (oropharynx) subsite
     tumor_filter_kwargs = {}
     subsite_dict = {"base":   ["C01.9"], 
@@ -210,25 +215,32 @@ def query_patients(data):
     if (me := data["midline_extension"]) != 0:
         q = q.filter(tumor__extension=_(me))
         
-    # DIAGNOSES filtering... more complicated, probably
-    # first ipsilateral
-    filter_kwargs = {"side": F("patient__tumor__position")}
-    for lnl in LNLs:
-        if (inv := int(data[f"ipsi_{lnl}"])) != 0:
-            filter_kwargs[f"{lnl}"] = _(inv)
+    # DIAGNOSES filtering. For each chosen modality a separate queryset is 
+    # created. They are then later compared to each other according to the 
+    # `combine` field.
+    q_mod = {}
+    mod_dict = dict(MODALITIES)
+    for i in data["modalities"]:
+        # ipsilateral
+        filter_ipsi = {"side": F("patient__tumor__position"),
+                       "modality": i}
+        
+        for lnl in LNLs:
+            if (inv := int(data[f"ipsi_{lnl}"])) != 0:
+                filter_ipsi[f"{lnl}"] = _(inv)
     
-    d = Diagnose.objects.filter(**filter_kwargs)
-    print(len(d))
+        d_ipsi = Diagnose.objects.filter(**filter_ipsi)
+        q_mod[mod_dict[i]] = q.filter(diagnose__in=d_ipsi)
+        
+        # contralateral
+        filter_contra = {"modality": i}
+
+        for lnl in LNLs:
+            if (inv := int(data[f"contra_{lnl}"])) != 0:
+                filter_contra[f"{lnl}"] = _(inv)
+
+        d_contra = Diagnose.objects.filter(**filter_contra)
+        d_contra = d_contra.exclude(side=F("patient__tumor__position"))
+        q_mod[mod_dict[i]] = q_mod[mod_dict[i]].filter(diagnose__in=d_contra)
     
-    q = q.filter(diagnose__in=d)
-            
-        # other_side = {"right": "left",
-        #               "left": "right"}
-            
-        # if (inv := int(data[f"contra_{lnl}"])) != 0:
-        #     filter_kwargs = {"diagnose__side": other_side[F("tumor__position")],
-        #                      f"diagnose__{lnl}": _(inv)}
-        #     q = q.filter(**filter_kwargs)
-    
-    
-    return q
+    return q_mod

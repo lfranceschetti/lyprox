@@ -130,13 +130,14 @@ def edit_diagnose_of_patient(request, *args, **kwargs):
     patient = Patient.objects.get(pk=kwargs["pk"])
 
     if request.method == "POST":
+        print(request.POST)
         diagnose = Diagnose.objects.get(pk=request.POST["diagnose_pk"])
         diagnose_form = DiagnoseForm(instance=diagnose)
 
         if diagnose.patient != patient:
             raise Exception("Find out which error to raise here!")
 
-        diagnose.delete()
+        # diagnose.delete()
 
         context = {"action": "add_diagnose",
                    "diagnose_form": diagnose_form,
@@ -169,9 +170,9 @@ def dashboard(request):
     form = DashboardForm(request.POST or None)
     
     if request.method == "POST" and form.is_valid():
-        q = query_patients(form.cleaned_data)
-        print(q)
-        context = {"form": form, "n": len(q)}
+        q_dict = query_patients(form.cleaned_data)
+        print(q_dict)
+        context = {"form": form, "n": len(q_dict["pCT"])}
     else:
         context = {"form": form}
         

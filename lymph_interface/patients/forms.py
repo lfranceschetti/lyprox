@@ -235,15 +235,20 @@ class DashboardForm(forms.Form):
                 b = cleaned_data[f"{side}_{lnl}b"]
                 cleaned_data[f"{side}_{lnl}"] = np.maximum(a,b)
                 
+        # making int our of str for list of selected T-stages
         str_list = cleaned_data["tstages"]
         cleaned_data["tstages"] = [int(s) for s in str_list]
+        
+        # converting str to int for list of selected modalities
+        str_list = cleaned_data["modalities"]
+        cleaned_data["modalities"] = [int(s) for s in str_list]
         
         return cleaned_data
         
         
         
     # select modalities to show
-    modality_checkboxes = forms.MultipleChoiceField(
+    modalities = forms.MultipleChoiceField(
         required=False, 
         widget=forms.CheckboxSelectMultiple, 
         choices=MODALITIES,
