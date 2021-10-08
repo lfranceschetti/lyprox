@@ -44,7 +44,8 @@ release = VERSION
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.napoleon",
-    "sphinx_autodoc_typehints"
+    "sphinx_autodoc_typehints",
+    "sphinx_markdown_builder"
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -58,15 +59,69 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 # -- Options for HTML output -------------------------------------------------
 
-html_title = project + " documentation"
+html_title = "Documentation for Django-based interface"
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
-html_permalinks_icon = '§'
+
+colors = {
+    "primary": "#005EA8",
+    "primary-light": "#EBF6FF",
+    "info": "#BDCFD6",
+    "info-light": "#F2F6F7",
+    "success": "#00AFA5",
+    "success-light": "#EBFFFE",
+    "warning": "#F17900",
+    "warning-light": "#FFEEDE",
+    "danger": "#AE0060",
+    "danger-light": "#FFEBF6"
+}
+
+html_permalinks_icon = '#'
 html_theme = "furo"
 html_favicon = "../core/static/favicon.ico"
+html_logo = "../core/static/logo.svg"
+html_theme_options = {
+    "light_css_variables": {
+        "color-brand-primary": colors["primary"],
+        "color-brand-content": colors["primary"],
+        "color-problematic": colors["danger"],
+        "color-foreground-secondary": colors["primary"],
+        "color-foreground-muted": colors["primary"],
+        "color-background-secondary": colors["primary-light"],
+        "color-background-hover": "#DEF0FF",
+        
+        # Admonitions / Notification
+        "color-admonition-title--attention": colors["danger"],
+        "color-admonition-title-background--attention": colors["danger-light"],
+        "color-admonition-title--danger": colors["danger"],
+        "color-admonition-title-background--danger": colors["danger-light"],
+        "color-admonition-title--error": colors["danger"],
+        "color-admonition-title-background--error": colors["danger-light"],
+        "color-admonition-title--hint": colors["success"],
+        "color-admonition-title-background--hint": colors["success-light"],
+        "color-admonition-title--tip": colors["success"],
+        "color-admonition-title-background--tip": colors["success-light"],
+        "color-admonition-title--important": colors["warning"],
+        "color-admonition-title-background--important": colors["warning-light"],
+        "color-admonition-title--warning": colors["warning"],
+        "color-admonition-title-background--warning": colors["warning-light"],
+        "color-admonition-title--caution": colors["warning"],
+        "color-admonition-title-background--caution": colors["warning-light"],
+        "color-admonition-title--note": colors["primary"],
+        "color-admonition-title-background--note": colors["primary-light"],
+        "color-admonition-title--seealso": colors["warning"],
+        "color-admonition-title-background--seealso": colors["warning-light"],
+        "color-admonition-title--admonition-todo": colors["info"],
+        "color-admonition-title-background--admonition-todo": colors["info-light"],
+        
+        "font-stack": "Segoe UI, sans-serif",
+        "font-stack--monospace": "Cascadia Code, monospace",
+    }
+}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+html_css_files = ["css/custom.css"]
