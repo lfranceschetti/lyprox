@@ -18,14 +18,21 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+from pathlib import Path
+from sphinx_view import DocumentationView
+
 from . import views
 
 urlpatterns = [
+    path("", views.index, name="index"),
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path("patients/", include("patients.urls")),
     path("dashboard/", include("dashboard.urls")),
-    path("", views.index, name="index"),
+    path("docs<path:path>", DocumentationView.as_view(
+        json_build_dir=Path(settings.DOCS_DIR),
+        base_template_name="docs.html"
+    ), name="documentation"),
 ]
 
 urlpatterns += static(settings.DOWNLOADS_URL, 

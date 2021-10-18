@@ -127,6 +127,7 @@ INSTALLED_APPS = [
     # third party apps
     "django_filters",
     # "django_extensions",  # only needed for plotting the model graph
+    "sphinx_view",
     "phonenumber_field",
 
     'django.contrib.admin',
@@ -248,3 +249,10 @@ except KeyError:
     DOWNLOADS_ROOT = BASE_DIR / "downloads"
 
 DOWNLOADS_URL = "/downloads/"
+
+
+# Documentation directory (built JSON)
+try:
+    DOCS_DIR = BASE_DIR / config["DOCS_DIR"]
+except KeyError:
+    DOCS_DIR = BASE_DIR / "docs/_build/json"
