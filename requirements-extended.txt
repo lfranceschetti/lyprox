@@ -2,9 +2,7 @@
 pytest-factoryboy==2.1
 pytest-django==4.2
 sphinx==4.2
-sphinx_rtd_theme
 sphinx-autodoc-typehints
 sphinx-markdown-builder
-furo
 django-extensions
-django-sphinx-view
+git+https://github.com/statease/sphinx-jsontoc-builder.git@master#egg=sphinxcontrib_jsontoc

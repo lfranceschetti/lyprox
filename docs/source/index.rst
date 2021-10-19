@@ -15,7 +15,7 @@ Django websie themselves with parts of the implementation.
 
 .. toctree::
    :maxdepth: 2
-   :caption: Content:
+   :hidden:
 
    patient_representation
    dashboard

@@ -255,4 +255,4 @@ DOWNLOADS_URL = "/downloads/"
 try:
     DOCS_DIR = BASE_DIR / config["DOCS_DIR"]
 except KeyError:
-    DOCS_DIR = BASE_DIR / "docs/_build/json"
+    DOCS_DIR = BASE_DIR / "docs/build/jsontoc"

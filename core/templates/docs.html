@@ -1,28 +1,32 @@
-{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en" class="has-navbar-fixed-top">
 
-{% block content %}
+{% include 'head.html' with stylesheet='docs.css' %}
 
-{% load static %}
+<body>
+    {% include 'navbar.html' %}
 
-<section class="section">
-    <div class="container">
-        <div class="columns">
-            <div class="column is-3">
-                <div class="content">
-                    {% block toc %}
-                    {{ doc.toc|safe }}
-                    {% endblock toc %}
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-3">
+                    <div class="content">
+                        {% block toctree %}
+                        {{ doc.toctree|safe }}
+                        {% endblock toctree %}
+                    </div>
                 </div>
-            </div>
-            <div class="column">
-                <div class="content">
-                    {% block doc %}
-                    {{ doc.body|safe }}
-                    {% endblock doc %}
+                <div class="column">
+                    <div class="content">
+                        {% block doc %}
+                        {{ doc.body|safe }}
+                        {% endblock doc %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-{% endblock content %}
+    {% include 'footer.html' %}
+</body>
+</html>
